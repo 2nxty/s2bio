@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#d4d4d4" />
+    <meta name="description" content="Connect with me on my social media platforms!" />
+    <meta name="author" content="nx" />
+    <meta property="og:title" content="nx" />
+    <meta property="og:description" content="Connect with me on my social media platforms!" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=YourName+Bio" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="nx" />
+    <meta name="twitter:description" content="Connect with me on my social media platforms!" />
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630?text=YourName+Bio" />
+    <title>nx</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Font: Satoshi (via Fontshare, as in example) -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
+    <!-- React CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://via.placeholder.com/32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://via.placeholder.com/180" />
+    <style>
+      /* Tooltip styling for badge hover */
+      [data-tooltip] {
+        position: relative;
+      }
+      [data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(18, 18, 18, 0.8);
+        color: #d4d4d4;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body class="text-[#d4d4d4] font-satoshi" style="background-color: #080808;">
+    <!-- Background Image with Blur -->
+    <div
+      class="fixed inset-0 bg-cover bg-center"
+      style="background-image: url('https://cdn.nest.rip/uploads/df42bf75-05d2-4fad-a515-38996b0100ee.gif'); opacity: 0.8; filter: blur(4px);"
+    ></div>
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" src="res/audio.mp3" loop></audio>
+    <!-- Main Content -->
+    <div class="relative flex items-center justify-center min-h-screen">
+      <div
+        class="bg-[rgba(18,18,18,0.2)] backdrop-blur-lg p-8 rounded-2xl w-full max-w-md shadow-lg"
+        style="border: 2px solid rgba(18, 18, 18, 0.4);"
+      >
+        <div id="root"></div>
+      </div>
+    </div>
+
+    <script type="text/babel">
+      const ProfileCard = () => {
+        const [isPlaying, setIsPlaying] = React.useState(false);
+        const audioRef = React.useRef(document.getElementById('backgroundMusic'));
+
+        const togglePlayPause = () => {
+          if (isPlaying) {
+            audioRef.current.pause();
+          } else {
+            audioRef.current.volume = 0.05; // Set volume to 5/100 on play
+            audioRef.current.play();
+          }
+          setIsPlaying(!isPlaying);
+        };
+
+        const socials = [
+          {
+            name: 'YouTube',
+            url: 'https://youtube.com/@2nxty',
+            icon: <i className="bi bi-youtube text-2xl"></i>,
+          },
+          {
+            name: 'X',
+            url: 'https://x.com/2nxty',
+            icon: <i className="bi bi-twitter-x text-2xl"></i>,
+          },
+          {
+            name: 'Twitch',
+            url: 'https://twitch.tv/2nxty',
+            icon: <i className="bi bi-twitch text-2xl"></i>,
+          },
+          {
+            name: 'Steam',
+            url: 'https://steamcommunity.com/id/2nxty',
+            icon: <i className="bi bi-steam text-2xl"></i>,
+          },
+        ];
+
+        const badges = [
+          { icon: 'bi-person-fill', tooltip: 'ID: 1', color: '#c9bae3' },
+          { icon: 'bi-award-fill', tooltip: 'Owner', color: '#e03f3f' },
+          { icon: 'bi-patch-check-fill', tooltip: 'Verified', color: '#3b82f6' },
+          { icon: 'bi-star-fill', tooltip: 'Donator', color: '#eab308' },
+          { icon: 'bi-key-fill', tooltip: 'Inviter', color: '#22c55e' },
+        ];
+
+        return (
+          <div className="text-center">
+            {/* Profile Image */}
+            <img
+              src="https://cdn.nest.rip/uploads/a90cf312-e9a7-422a-b247-a58b6ef94535.jpg"
+              alt="Profile"
+              className="w-24 h-24 rounded-full mx-auto mb-4"
+              style={{ border: '2px solid rgba(18, 18, 18, 0.4)' }}
+            />
+            {/* Badge Bar */}
+            <div className="flex justify-center space-x-3 mb-3">
+              {badges.map((badge, index) => (
+                <div
+                  key={index}
+                  className="w-8 h-8 flex items-center justify-center bg-[rgba(18,18,18,0.2)] rounded-full hover:bg-[rgba(212,212,212,0.32)] transition-colors"
+                  data-tooltip={badge.tooltip}
+                >
+                  <i className={`bi ${badge.icon} text-lg`} style={{ color: badge.color }}></i>
+                </div>
+              ))}
+            </div>
+            {/* Username with Sparkles GIF Background and Glow */}
+            <div className="relative inline-block">
+              <h1
+                className="text-3xl text-zinc-200 font-bold mb-2 px-4 py-2"
+                style={{
+                  backgroundImage: "url('res/sparkles.gif')",
+                  backgroundRepeat: 'repeat-x',
+                  backgroundSize: 'auto 100%',
+                  textShadow: '0 0 8px rgba(212, 212, 212, 0.8)',
+                }}
+              >
+                nx
+              </h1>
+            </div>
+            {/* Social Links */}
+            <div className="flex justify-center space-x-4 mb-6">
+              {socials.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 flex items-center justify-center text-[rgba(212,212,212,0.6)] hover:text-[#d4d4d4] transition-colors"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+            {/* Audio Controls */}
+            <div className="flex items-center justify-center mb-4">
+              {/* Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                className="w-10 h-10 flex items-center justify-center bg-[rgba(18,18,18,0.2)] rounded-full hover:bg-[rgba(212,212,212,0.32)] transition-colors mr-2"
+              >
+                {isPlaying ? (
+                  <i className="bi bi-pause-fill text-2xl"></i>
+                ) : (
+                  <i className="bi bi-play-fill text-2xl"></i>
+                )}
+              </button>
+              {/* Volume Control */}
+              <i className="bi bi-volume-up-fill text-2xl mr-2"></i>
+              <input
+                type="range"
+                min="0"
+                max="50"
+                defaultValue="5"
+                onChange={(e) => (audioRef.current.volume = e.target.value / 100)}
+                className="w-32"
+                style={{ accentColor: '#d4d4d4' }}
+              />
+            </div>
+            {/* Artist and Song Info */}
+            <p className="text-sm text-[rgba(212,212,212,0.6)] mb-4"><i class="bi bi-music-note"></i> Eternal Rin - bloodstain</p>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<ProfileCard />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
