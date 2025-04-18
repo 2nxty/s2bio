@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#d4d4d4" />
+    <meta name="description" content="Connect with me on my social media platforms!" />
+    <meta name="author" content="Template" />
+    <meta property="og:title" content="Template" />
+    <meta property="og:description" content="Connect with me on my social media platforms!" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=YourName+Bio" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Template" />
+    <meta name="twitter:description" content="Connect with me on my social media platforms!" />
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630?text=YourName+Bio" />
+    <title>Template</title>
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Font: Satoshi -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://via.placeholder.com/32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://via.placeholder.com/180" />
+    <style>
+      :root {
+        --color-background: #141414;
+        --color-text-primary: #ebebeb;
+        --color-text-username: #e4e4e7;
+        --color-text-secondary: rgba(219, 219, 219, 0.8);
+        --color-card-bg: rgba(18, 18, 18, 0.5);
+        --color-card-border: rgba(18, 18, 18, 0.4);
+        --color-badge-bg: rgba(18, 18, 18, 0.5);
+        --color-badge-hover: rgba(219, 219, 219, 0.5);
+        --color-tooltip-bg: rgba(18, 18, 18, 0.8);
+        --color-shadow: rgba(212, 212, 212, 0.8);
+        --color-accent: #ebebeb;
+        --color-badge-id: #c9bae3;
+        --color-badge-invited: #dae0df;
+      }
 
+      body {
+        background: var(--color-background) url('https://www.transparenttextures.com/patterns/cartographer.png');
+        background-color: var(--color-background);
+        color: var(--color-text-primary);
+        font-family: 'Satoshi', sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      .card {
+        background-color: var(--color-card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        border: 2px solid var(--color-card-border);
+      }
+      .audio-card {
+        background-color: var(--color-card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        border: 2px solid var(--color-card-border);
+      }
+      .profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid var(--color-card-border);
+        margin: 0 auto 15px;
+      }
+      .badges {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      .badge {
+        width: 32px;
+        height: 32px;
+        background-color: var(--color-badge-bg);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background-color 0.3s;
+      }
+      .badge:hover {
+        background-color: var(--color-badge-hover);
+      }
+      .badge:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-tooltip-bg);
+        color: var(--color-text-primary);
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 10;
+        opacity: 1;
+        transition: opacity 0.2s;
+      }
+      .badge::after {
+        opacity: 0;
+      }
+      .username {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--color-text-username);
+        margin-bottom: 15px;
+        padding: 5px 15px;
+        /* background-image: url('res/sparkles.gif'); */
+        background-repeat: repeat-x;
+        background-size: auto 100%;
+        text-shadow: 0 0 8px var(--color-shadow);
+        display: inline-block;
+      }
+      .socials {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .socials a {
+        color: var(--color-text-secondary);
+        font-size: 28px;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .socials a:hover {
+        color: var(--color-text-primary);
+      }
+      .audio-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      .play-pause-btn {
+        width: 40px;
+        height: 40px;
+        background-color: var(--color-badge-bg);
+        border-radius: 50%;
+        border: none;
+        color: var(--color-text-primary);
+        font-size: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .play-pause-btn:hover {
+        background-color: var(--color-badge-hover);
+      }
+      .volume-icon {
+        font-size: 24px;
+      }
+      .volume-slider {
+        width: 100px;
+        accent-color: var(--color-accent);
+      }
+      .song-info {
+        font-size: 14px;
+        color: var(--color-text-secondary);
+      }
+      .song-info i {
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="backgroundMusic" src="res/audio.mp3" loop></audio>
+    <div class="container">
+      <div class="card">
+        <img src="res/pfp.png" alt="Profile" class="profile-img" />
+        <div class="badges">
+          <div class="badge" data-tooltip="ID: 000"><i class="bi bi-123" style="color: var(--color-badge-id);"></i></div>
+          <div class="badge" data-tooltip="Invited"><i class="bi bi-person-fill-check" style="color: var(--color-badge-invited);"></i></div>
+          <!--div class="badge" data-tooltip="Owner"><i class="bi bi-award-fill" style="color: #e03f3f;"></i></div-->
+          <div class="badge" data-tooltip="Verified"><i class="bi bi-patch-check-fill" style="color: #3b82f6;"></i></div>
+          <div class="badge" data-tooltip="Donator"><i class="bi bi-star-fill" style="color: #eab308;"></i></div>
+          <div class="badge" data-tooltip="Inviter"><i class="bi bi-key-fill" style="color: #22c55e;"></i></div>
+        </div>
+        <h1 class="username">Template</h1>
+        <div class="socials">
+          <a href="https://youtube.com/@temp" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i></a>
+          <a href="https://x.com/temp" target="_blank" rel="noopener noreferrer"><i class="bi bi-twitter-x"></i></a>
+          <a href="https://twitch.tv/temp" target="_blank" rel="noopener noreferrer"><i class="bi bi-twitch"></i></a>
+          <a href="https://steamcommunity.com/id/temp" target="_blank" rel="noopener noreferrer"><i class="bi bi-steam"></i></a>
+        </div>
+      </div>
+      <div class="audio-card">
+        <div class="audio-controls">
+          <button id="playPauseBtn" class="play-pause-btn"><i class="bi bi-play-fill"></i></button>
+          <i class="bi bi-volume-up-fill volume-icon"></i>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="50" value="5" />
+        </div>
+        <p class="song-info"><i class="bi bi-music-note"></i>Rick Astley - Never Gonna Give You Up</p>
+      </div>
+    </div>
+
+    <script>
+      const audio = document.getElementById('backgroundMusic');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const volumeSlider = document.getElementById('volumeSlider');
+      let isPlaying = false;
+
+      playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          audio.pause();
+          playPauseBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
+        } else {
+          audio.volume = volumeSlider.value / 100;
+          audio.play();
+          playPauseBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+        }
+        isPlaying = !isPlaying;
+      });
+
+      volumeSlider.addEventListener('input', () => {
+        audio.volume = volumeSlider.value / 100;
+      });
+    </script>
+  </body>
+</html>
