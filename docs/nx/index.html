@@ -1,205 +1,577 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head> 
+  <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="https://nxty.s2.rip/img/cav.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#d4d4d4" />
+    <meta name="theme-color" content="#0a0b0d" />
     <meta name="description" content="Connect with me on my social media platforms!" />
     <meta name="author" content="nx" />
+
     <meta property="og:title" content="nx" />
     <meta property="og:description" content="Connect with me on my social media platforms!" />
-    <meta property="og:image" content="" />
+    <meta property="og:image" content="https://cdn.nest.rip/uploads/97a02ee2-e9a9-4b4d-8943-e31f9d45c2c7.jpg" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="nx" />
     <meta name="twitter:description" content="Connect with me on my social media platforms!" />
-    <meta name="twitter:image" content="" />
+    <meta name="twitter:image" content="https://cdn.nest.rip/uploads/97a02ee2-e9a9-4b4d-8943-e31f9d45c2c7.jpg" />
+
     <title>nx</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Bootstrap Icons CDN -->
+
+    <link rel="icon" type="image/x-icon" href="https://nxty.s2.rip/img/cav.ico" />
+    <link rel="apple-touch-icon" href="https://nxty.s2.rip/img/cav.ico" />
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.nest.rip" crossorigin />
+    <link rel="preload" as="image" href="https://cdn.nest.rip/uploads/97a02ee2-e9a9-4b4d-8943-e31f9d45c2c7.jpg" fetchpriority="high" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Font: Satoshi (via Fontshare, as in example) -->
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,700&display=swap" rel="stylesheet" />
-    <!-- React CDNs -->
-    <script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="https://via.placeholder.com/32" />
-    <link rel="apple-touch-icon" sizes="180x180" href="https://via.placeholder.com/180" />
+    <!-- Satoshi: display/body face. JetBrains Mono: utility face for the eyebrow label,
+         badge tooltips and track info — a quiet nod to the "signal falling through the
+         dark" idea the rain layer carries. -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css" rel="stylesheet" />
+
     <style>
-      /* Tooltip styling for badge hover */
-      [data-tooltip] {
-        position: relative;
+      :root {
+        /* Flat, monochrome palette — no gradients anywhere on this page. */
+        --bg: #0a0b0d;
+        --panel: rgba(255, 255, 255, 0.035);
+        --panel-border: rgba(255, 255, 255, 0.09);
+        --panel-hover: rgba(255, 255, 255, 0.07);
+        --fg: #e9e9ea;
+        --fg-dim: #a7a9ad;
+        --fg-mute: #6c6f74;
+        --hairline: rgba(255, 255, 255, 0.08);
+        --rain: 210, 214, 222;
       }
-      [data-tooltip]:hover::after {
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+        overflow-x: hidden;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+
+      /* Signature layer: falling rain streaks, drawn on canvas so they stay
+         smooth without ever touching layout or paint of the card above them. */
+      #rain {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        display: block;
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1.5rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 25rem;
+        padding: 2.25rem 2rem 2rem;
+        border-radius: 0.875rem;
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(20px) saturate(120%);
+        -webkit-backdrop-filter: blur(20px) saturate(120%);
+        text-align: center;
+      }
+
+      .avatar {
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 9999px;
+        border: 1px solid var(--panel-border);
+        object-fit: cover;
+        margin: 0 auto 1.25rem;
+        display: block;
+      }
+
+      .badges {
+        display: flex;
+        justify-content: center;
+        gap: 0.625rem;
+        margin: 0 0 1.25rem;
+        padding: 0;
+        list-style: none;
+      }
+
+      .badge {
+        position: relative;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: var(--panel);
+        border: 1px solid var(--hairline);
+        transition: background-color 150ms ease, border-color 150ms ease;
+      }
+
+      .badge:hover,
+      .badge:focus-visible {
+        background: var(--panel-hover);
+        border-color: var(--panel-border);
+      }
+
+      .badge i {
+        font-size: 1.0625rem;
+      }
+
+      .badge[data-tooltip]::after {
         content: attr(data-tooltip);
         position: absolute;
-        top: -30px;
+        top: -2.15rem;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(18, 18, 18, 0.8);
-        color: #d4d4d4;
-        padding: 4px 8px;
-        border-radius: 8px;
-        font-size: 12px;
+        background: #17181b;
+        border: 1px solid var(--hairline);
+        color: var(--fg-dim);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        padding: 3px 7px;
+        border-radius: 5px;
         white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms ease;
         z-index: 10;
+      }
+
+      .badge:hover::after,
+      .badge:focus-visible::after {
+        opacity: 1;
+      }
+
+      .username {
+        display: inline-block;
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        color: var(--fg);
+        margin: 0 0 1.5rem;
+        background-image: url("res/sparkles.gif");
+        background-repeat: repeat-x;
+        background-size: auto 100%;
+        text-shadow: 0 0 8px rgba(233, 233, 234, 0.8), 0 0 18px rgba(233, 233, 234, 0.35);
+      }
+
+      .socials {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 0 0 1.5rem;
+      }
+
+      .socials a {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        color: var(--fg-dim);
+        text-decoration: none;
+        transition: color 150ms ease, background-color 150ms ease;
+      }
+
+      .socials a:hover,
+      .socials a:focus-visible {
+        color: var(--fg);
+        background: var(--panel-hover);
+      }
+
+      .socials i {
+        font-size: 1.25rem;
+      }
+
+      hr.divider {
+        border: none;
+        border-top: 1px solid var(--hairline);
+        margin: 0 0 1.25rem;
+      }
+
+      .player {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.625rem;
+        margin: 0 0 0.875rem;
+      }
+
+      .play-btn {
+        width: 2.25rem;
+        height: 2.25rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--hairline);
+        border-radius: 9999px;
+        background: var(--panel);
+        color: var(--fg);
+        cursor: pointer;
+        transition: background-color 150ms ease, border-color 150ms ease;
+      }
+
+      .play-btn:hover,
+      .play-btn:focus-visible {
+        background: var(--panel-hover);
+        border-color: var(--panel-border);
+      }
+
+      .play-btn i {
+        font-size: 1.25rem;
+      }
+
+      .volume-icon {
+        font-size: 1.125rem;
+        color: var(--fg-mute);
+        flex-shrink: 0;
+      }
+
+      input[type="range"] {
+        width: 7rem;
+        height: 2px;
+        appearance: none;
+        -webkit-appearance: none;
+        background: var(--hairline);
+        border-radius: 999px;
+        outline: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 12px;
+        height: 12px;
+        border-radius: 9999px;
+        background: var(--fg);
+        cursor: pointer;
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        border: none;
+        border-radius: 9999px;
+        background: var(--fg);
+        cursor: pointer;
+      }
+
+      .track-info {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.01em;
+        color: var(--fg-mute);
+        margin: 0;
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      .badge:focus-visible,
+      input:focus-visible {
+        outline: 1px solid var(--fg-dim);
+        outline-offset: 2px;
+      }
+
+      @media (max-width: 380px) {
+        .card {
+          padding: 1.75rem 1.25rem;
+        }
+        input[type="range"] {
+          width: 5rem;
+        }
+      }
+
+      /* Click-to-unlock overlay: blurs the page until the visitor interacts,
+         which is also what satisfies the browser's autoplay gesture
+         requirement so the music can start on click. */
+      #unlock {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10, 11, 13, 0.55);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        cursor: pointer;
+        border: 0;
+        padding: 0;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        color: var(--fg);
+        transition: opacity 300ms ease;
+      }
+
+      #unlock span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 9999px;
+        background: var(--panel);
+        font-size: 0.8125rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      #unlock i {
+        font-size: 1rem;
+        color: var(--fg-mute);
+      }
+
+      #unlock.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .wrap {
+        transition: filter 300ms ease;
+      }
+
+      .wrap.is-locked {
+        filter: blur(6px);
       }
     </style>
   </head>
-  <body class="text-[#d4d4d4] font-satoshi" style="background-color: #080808;">
-    <!-- Background Image with Blur -->
-    <div
-      class="fixed inset-0 bg-cover bg-center"
-      style="background-image: url('https://cdn.nest.rip/uploads/df42bf75-05d2-4fad-a515-38996b0100ee.gif'); opacity: 0.8; filter: blur(4px);"
-    ></div>
-    <!-- Audio Element -->
-    <audio id="backgroundMusic" src="res/audio.mp3" loop></audio>
-    <!-- Main Content -->
-    <div class="relative flex items-center justify-center min-h-screen">
-      <div
-        class="bg-[rgba(18,18,18,0.2)] backdrop-blur-lg p-8 rounded-2xl w-full max-w-md shadow-lg"
-        style="border: 2px solid rgba(18, 18, 18, 0.4);"
-      >
-        <div id="root"></div>
+  <body>
+    <canvas id="rain" aria-hidden="true"></canvas>
+
+    <audio id="background-music" src="res/audio.mp3" loop preload="none"></audio>
+
+    <button id="unlock" type="button" aria-label="Click anywhere to enter">
+      <span><i class="bi bi-cursor-fill" aria-hidden="true"></i>click anywhere</span>
+    </button>
+
+    <main class="wrap is-locked">
+      <div class="card">
+        <img
+          class="avatar"
+          src="https://cdn.nest.rip/uploads/97a02ee2-e9a9-4b4d-8943-e31f9d45c2c7.jpg"
+          alt="nx's profile picture"
+          width="88"
+          height="88"
+          fetchpriority="high"
+        />
+
+        <ul class="badges" role="list">
+          <li class="badge" data-tooltip="UID: 1" tabindex="0">
+            <i class="bi bi-123" style="color:#c9bae3" aria-hidden="true"></i>
+            <span class="sr-only">UID: 1</span>
+          </li>
+          <li class="badge" data-tooltip="Owner" tabindex="0">
+            <i class="bi bi-award-fill" style="color:#e03f3f" aria-hidden="true"></i>
+            <span class="sr-only">Owner</span>
+          </li>
+          <li class="badge" data-tooltip="Verified" tabindex="0">
+            <i class="bi bi-patch-check-fill" style="color:#3b82f6" aria-hidden="true"></i>
+            <span class="sr-only">Verified</span>
+          </li>
+          <li class="badge" data-tooltip="Donator" tabindex="0">
+            <i class="bi bi-star-fill" style="color:#eab308" aria-hidden="true"></i>
+            <span class="sr-only">Donator</span>
+          </li>
+          <li class="badge" data-tooltip="Inviter" tabindex="0">
+            <i class="bi bi-key-fill" style="color:#22c55e" aria-hidden="true"></i>
+            <span class="sr-only">Inviter</span>
+          </li>
+        </ul>
+
+        <h1 class="username">nx</h1>
+
+        <nav class="socials" aria-label="Social media links">
+          <a href="https://youtube.com/@2nxty" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <i class="bi bi-youtube" aria-hidden="true"></i>
+          </a>
+          <a href="https://x.com/2nxty" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <i class="bi bi-twitter-x" aria-hidden="true"></i>
+          </a>
+          <a href="https://twitch.tv/2nxty" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+            <i class="bi bi-twitch" aria-hidden="true"></i>
+          </a>
+          <a href="https://steamcommunity.com/id/2nxty" target="_blank" rel="noopener noreferrer" aria-label="Steam">
+            <i class="bi bi-steam" aria-hidden="true"></i>
+          </a>
+          <a href="https://github.com/2nxty" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <i class="bi bi-github" aria-hidden="true"></i>
+          </a>
+        </nav>
+
+        <hr class="divider" />
+
+        <div class="player">
+          <button id="play-pause" class="play-btn" type="button" aria-label="Play background music" aria-pressed="false">
+            <i class="bi bi-play-fill" aria-hidden="true"></i>
+          </button>
+          <i class="bi bi-volume-up-fill volume-icon" aria-hidden="true"></i>
+          <input id="volume" type="range" min="0" max="50" value="5" aria-label="Volume" />
+        </div>
+
+        <p class="track-info"><i class="bi bi-music-note" aria-hidden="true"></i> Night Lovell — Sadly I Cannot Control</p>
       </div>
-    </div>
+    </main>
 
-    <script type="text/babel">
-      const ProfileCard = () => {
-        const [isPlaying, setIsPlaying] = React.useState(false);
-        const audioRef = React.useRef(document.getElementById('backgroundMusic'));
+    <script>
+      (function () {
+        const audio = document.getElementById("background-music");
+        const playButton = document.getElementById("play-pause");
+        const playIcon = playButton.querySelector("i");
+        const volumeSlider = document.getElementById("volume");
+        const unlockButton = document.getElementById("unlock");
+        const wrap = document.querySelector(".wrap");
 
-        const togglePlayPause = () => {
-          if (isPlaying) {
-            audioRef.current.pause();
-          } else {
-            audioRef.current.volume = 0.05; // Set volume to 5/100 on play
-            audioRef.current.play();
+        audio.volume = Number(volumeSlider.value) / 100;
+        let isPlaying = false;
+
+        function setPlayingState(playing) {
+          isPlaying = playing;
+          playIcon.className = playing ? "bi bi-pause-fill" : "bi bi-play-fill";
+          playButton.setAttribute("aria-label", playing ? "Pause background music" : "Play background music");
+          playButton.setAttribute("aria-pressed", String(playing));
+        }
+
+        async function tryPlay() {
+          try {
+            await audio.play();
+            setPlayingState(true);
+          } catch (err) {
+            setPlayingState(false);
           }
-          setIsPlaying(!isPlaying);
-        };
+        }
 
-        const socials = [
-          {
-            name: 'YouTube',
-            url: 'https://youtube.com/@2nxty',
-            icon: <i className="bi bi-youtube text-2xl"></i>,
-          },
-          {
-            name: 'X',
-            url: 'https://x.com/2nxty',
-            icon: <i className="bi bi-twitter-x text-2xl"></i>,
-          },
-          {
-            name: 'Twitch',
-            url: 'https://twitch.tv/2nxty',
-            icon: <i className="bi bi-twitch text-2xl"></i>,
-          },
-          {
-            name: 'Steam',
-            url: 'https://steamcommunity.com/id/2nxty',
-            icon: <i className="bi bi-steam text-2xl"></i>,
-          },
-          {
-            name: 'GitHub',
-            url: 'https://github.com/2nxty',
-            icon: <i className="bi bi-github text-2xl"></i>,
-          },
-        ];
+        playButton.addEventListener("click", () => {
+          if (isPlaying) {
+            audio.pause();
+            setPlayingState(false);
+          } else {
+            tryPlay();
+          }
+        });
 
-        const badges = [
-          { icon: 'bi-123', tooltip: 'UID: 1', color: '#c9bae3' },
-          { icon: 'bi-award-fill', tooltip: 'Owner', color: '#e03f3f' },
-          { icon: 'bi-patch-check-fill', tooltip: 'Verified', color: '#3b82f6' },
-          { icon: 'bi-star-fill', tooltip: 'Donator', color: '#eab308' },
-          { icon: 'bi-key-fill', tooltip: 'Inviter', color: '#22c55e' },
-        ];
+        volumeSlider.addEventListener("input", (e) => {
+          audio.volume = Number(e.target.value) / 100;
+        });
 
-        return (
-          <div className="text-center">
-            {/* Profile Image */}
-            <img
-              src="https://cdn.nest.rip/uploads/a90cf312-e9a7-422a-b247-a58b6ef94535.jpg"
-              alt="Profile"
-              className="w-24 h-24 rounded-full mx-auto mb-4"
-              style={{ border: '2px solid rgba(18, 18, 18, 0.4)' }}
-            />
-            {/* Badge Bar */}
-            <div className="flex justify-center space-x-3 mb-3">
-              {badges.map((badge, index) => (
-                <div
-                  key={index}
-                  className="w-8 h-8 flex items-center justify-center bg-[rgba(18,18,18,0.2)] rounded-full hover:bg-[rgba(212,212,212,0.32)] transition-colors"
-                  data-tooltip={badge.tooltip}
-                >
-                  <i className={`bi ${badge.icon} text-lg`} style={{ color: badge.color }}></i>
-                </div>
-              ))}
-            </div>
-            {/* Username with Sparkles GIF Background and Glow */}
-            <div className="relative inline-block">
-              <h1
-                className="text-3xl text-zinc-200 font-bold mb-2 px-4 py-2"
-                style={{
-                  backgroundImage: "url('res/sparkles.gif')",
-                  backgroundRepeat: 'repeat-x',
-                  backgroundSize: 'auto 100%',
-                  textShadow: '0 0 8px rgba(212, 212, 212, 0.8)',
-                }}
-              >
-                nx
-              </h1>
-            </div>
-            {/* Social Links */}
-            <div className="flex justify-center space-x-4 mb-6">
-              {socials.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 flex items-center justify-center text-[rgba(212,212,212,0.6)] hover:text-[#d4d4d4] transition-colors"
-                >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
-            {/* Audio Controls */}
-            <div className="flex items-center justify-center mb-4">
-              {/* Play/Pause Button */}
-              <button
-                onClick={togglePlayPause}
-                className="w-10 h-10 flex items-center justify-center bg-[rgba(18,18,18,0.2)] rounded-full hover:bg-[rgba(212,212,212,0.32)] transition-colors mr-2"
-              >
-                {isPlaying ? (
-                  <i className="bi bi-pause-fill text-2xl"></i>
-                ) : (
-                  <i className="bi bi-play-fill text-2xl"></i>
-                )}
-              </button>
-              {/* Volume Control */}
-              <i className="bi bi-volume-up-fill text-2xl mr-2"></i>
-              <input
-                type="range"
-                min="0"
-                max="50"
-                defaultValue="5"
-                onChange={(e) => (audioRef.current.volume = e.target.value / 100)}
-                className="w-32"
-                style={{ accentColor: '#d4d4d4' }}
-              />
-            </div>
-            {/* Artist and Song Info */}
-            <p className="text-sm text-[rgba(212,212,212,0.6)] mb-4"><i class="bi bi-music-note"></i> Eternal Rin - bloodstain</p>
-          </div>
-        );
-      };
+        audio.addEventListener("pause", () => setPlayingState(false));
+        audio.addEventListener("ended", () => setPlayingState(false));
 
-      ReactDOM.render(<ProfileCard />, document.getElementById('root'));
+        unlockButton.addEventListener("click", () => {
+          unlockButton.classList.add("is-hidden");
+          wrap.classList.remove("is-locked");
+          unlockButton.setAttribute("aria-hidden", "true");
+          unlockButton.tabIndex = -1;
+          tryPlay();
+        });
+      })();
+    </script>
+
+    <script>
+      // Signature element: monochrome rain, drawn as falling streaks with
+      // per-drop depth (speed/opacity/length tied together) and a fading
+      // trail. No color, no gradients — just light moving through the dark.
+      window.addEventListener("DOMContentLoaded", function () {
+        const canvas = document.getElementById("rain");
+        if (!canvas || !canvas.getContext) return;
+        const ctx = canvas.getContext("2d");
+        const RAIN = "220, 224, 230";
+        const BG = "10, 11, 13";
+
+        let dpr = 1;
+        let w = 0;
+        let h = 0;
+        let drops = [];
+        let raf = null;
+
+        function makeDrop(startAnywhere) {
+          const depth = Math.random(); // 0 = far/faint/slow, 1 = near/bright/fast
+          return {
+            x: Math.random() * w,
+            y: startAnywhere ? Math.random() * h : -40,
+            len: 14 + depth * 34,
+            speed: 3 + depth * 7,
+            drift: (Math.random() - 0.5) * 0.5,
+            opacity: 0.18 + depth * 0.45,
+            width: 1 + depth,
+          };
+        }
+
+        function resize() {
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          w = window.innerWidth;
+          h = window.innerHeight;
+          canvas.width = Math.max(1, Math.round(w * dpr));
+          canvas.height = Math.max(1, Math.round(h * dpr));
+          canvas.style.width = w + "px";
+          canvas.style.height = h + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const count = Math.max(60, Math.round((w * h) / 6500));
+          drops = Array.from({ length: count }, () => makeDrop(true));
+
+          // Paint one frame immediately so there's never a blank flash,
+          // and so the reduced-motion path has something to show.
+          paintFrame(true);
+        }
+
+        function paintFrame(isFirstPaint) {
+          ctx.fillStyle = isFirstPaint ? `rgb(${BG})` : `rgba(${BG}, 0.2)`;
+          ctx.fillRect(0, 0, w, h);
+
+          for (const d of drops) {
+            ctx.strokeStyle = `rgba(${RAIN}, ${d.opacity})`;
+            ctx.lineWidth = d.width;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(d.x + d.drift * d.len * 0.4, d.y + d.len);
+            ctx.stroke();
+
+            d.y += d.speed;
+            d.x += d.drift;
+            if (d.y - d.len > h) Object.assign(d, makeDrop(false));
+          }
+        }
+
+        function loop() {
+          paintFrame(false);
+          raf = requestAnimationFrame(loop);
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        raf = requestAnimationFrame(loop);
+      });
     </script>
   </body>
 </html>
