@@ -3,86 +3,774 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>S2 BIO</title>
-  <link rel="icon" type="image/x-icon" href="res/fav.ico">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="res/style.css">
+  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="description" content="A sleek solution for your bio links." />
+  <title>❤RIP</title>
+
+  <link rel="icon" type="image/x-icon" href="res/fav.ico" />
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Same pairing as the profile page: Satoshi for display/body, JetBrains
+       Mono for labels and small utility text, so the whole site reads as
+       one product. -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Flat, dark palette with a single warm-orange accent — no gradients. */
+      --bg: #0a0b0d;
+      --panel: rgba(255, 255, 255, 0.035);
+      --panel-border: rgba(255, 255, 255, 0.09);
+      --panel-hover: rgba(255, 255, 255, 0.07);
+      --fg: #e9e9ea;
+      --fg-dim: #a7a9ad;
+      --fg-mute: #6c6f74;
+      --hairline: rgba(255, 255, 255, 0.08);
+      --accent: #f97316;
+      --accent-dim: rgba(249, 115, 22, 0.14);
+      --accent-border: rgba(249, 115, 22, 0.35);
+      --particle: 249, 115, 22;
+      --header-h: 4rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 1px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* Shared brand signature: quiet floating particles, same system as the
+       profile page, kept sparse here since it sits behind a full page of
+       content rather than a single card. */
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: block;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-h);
+      padding: 0 1.75rem;
+      background: rgba(10, 11, 13, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.0625rem;
+      letter-spacing: 0.01em;
+    }
+
+    .header-logo i {
+      font-size: 1.125rem;
+      color: var(--accent);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--accent-dim);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      background: #e0670f;
+      border-color: #e0670f;
+    }
+
+    /* ---------- Layout shell ---------- */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.75rem;
+    }
+
+    section {
+      padding: 5.5rem 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-mute);
+      margin: 0 0 0.875rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero-section {
+      min-height: calc(100vh - var(--header-h));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    #animated-text {
+      margin: 0 0 0.875rem;
+      font-size: clamp(2.25rem, 6vw, 3.75rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .cursor {
+      display: inline-block;
+      color: var(--accent);
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .hero-section > p {
+      margin: 0 0 2rem;
+      max-width: 32rem;
+      color: var(--fg-dim);
+      font-size: 1.0625rem;
+    }
+
+    .join-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 0.625rem;
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      transition: background-color 150ms ease, transform 150ms ease;
+    }
+
+    .join-btn:hover,
+    .join-btn:focus-visible {
+      background: #e0670f;
+    }
+
+    .join-btn:active {
+      transform: translateY(1px);
+    }
+
+    .join-btn i.bi-arrow-right {
+      transition: transform 150ms ease;
+    }
+
+    .join-btn:hover i.bi-arrow-right {
+      transform: translateX(3px);
+    }
+
+    /* ---------- Section headings ---------- */
+    .section-head {
+      text-align: center;
+      margin: 0 0 2.75rem;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-transform: lowercase;
+    }
+
+    /* ---------- Feature / plan cards ---------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      padding: 1.75rem;
+      border-radius: 0.875rem;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      text-align: left;
+      transition: background-color 150ms ease, border-color 150ms ease;
+    }
+
+    .feature-card:hover {
+      background: var(--panel-hover);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .feature-card > i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+      background: var(--panel);
+      border: 1px solid var(--hairline);
+      font-size: 1.1875rem;
+      color: var(--fg-dim);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--fg-mute);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* Plans reuse the same card shell but list perks as rows instead of prose. */
+    .plans-section .features-grid {
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+
+    .plans-section .feature-card p {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      color: var(--fg-dim);
+      font-size: 0.9375rem;
+    }
+
+    .plans-section .feature-card p .icon {
+      margin-right: 0.5rem;
+      font-size: 0.9375rem;
+    }
+
+    .plans-section .feature-card:nth-child(1) .icon {
+      color: #22c55e;
+    }
+
+    .plans-section .feature-card:nth-child(2) {
+      border-color: rgba(234, 179, 8, 0.35);
+    }
+
+    .plans-section .feature-card:nth-child(2) > i {
+      color: #eab308;
+      border-color: rgba(234, 179, 8, 0.25);
+    }
+
+    .plans-section .feature-card:nth-child(2) .icon {
+      color: #eab308;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--hairline);
+      padding: 1.75rem;
+      text-align: center;
+    }
+
+    footer p {
+      margin: 0;
+      color: var(--fg-mute);
+      font-size: 0.8125rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    @media (max-width: 560px) {
+      section {
+        padding: 3.5rem 0;
+      }
+      header {
+        padding: 0 1.25rem;
+      }
+      .container {
+        padding: 0 1.25rem;
+      }
+    }
+
+    /* ---------- How to join modal ---------- */
+    #how-to-join-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(10, 11, 13, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+
+    #how-to-join-modal.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      position: relative;
+      width: 100%;
+      max-width: 26rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      padding: 2rem;
+      border-radius: 0.875rem;
+      background: #101113;
+      border: 1px solid var(--panel-border);
+      transform: translateY(8px);
+      transition: transform 200ms ease;
+    }
+
+    #how-to-join-modal.is-open .modal-dialog {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.9rem;
+      right: 0.9rem;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid var(--hairline);
+      background: var(--panel);
+      color: var(--fg-dim);
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus-visible {
+      background: var(--panel-hover);
+      border-color: var(--panel-border);
+      color: var(--fg);
+    }
+
+    .modal-eyebrow {
+      display: inline-block;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 0.5rem;
+    }
+
+    .modal-dialog h2 {
+      margin: 0 0 1rem;
+      font-size: 1.375rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 0 0 1.5rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .modal-steps li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .modal-steps .step-num {
+      flex-shrink: 0;
+      width: 1.625rem;
+      height: 1.625rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .modal-steps p {
+      margin: 0;
+      color: var(--fg-dim);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+    }
+
+    .modal-steps strong {
+      color: var(--fg);
+    }
+
+    .modal-note {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.875rem 1rem;
+      border-radius: 0.625rem;
+      background: var(--panel);
+      border: 1px solid var(--hairline);
+      margin: 0;
+      font-size: 0.8125rem;
+      color: var(--fg-mute);
+      line-height: 1.5;
+    }
+
+    .modal-note i {
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+      color: var(--fg-mute);
+    }
+  </style>
 </head>
 <body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
   <header>
     <div class="header-logo">
       <i class="bi bi-suit-heart-fill"></i>
-      <span>BIO</span>
+      <span>heart rip</span>
     </div>
     <div class="header-btn">
-      <a href="https://discord.gg/mYaGj3DCXN">
-        <i class="bi bi-discord"></i> Discord
-      </a>
+      <button class="btn" id="how-to-join-btn" type="button" aria-haspopup="dialog" aria-controls="how-to-join-modal">
+        <i class="bi bi-question-circle" aria-hidden="true"></i> How to join
+      </button>
     </div>
   </header>
 
+  <div id="how-to-join-modal" role="dialog" aria-modal="true" aria-labelledby="how-to-join-title">
+    <div class="modal-dialog">
+      <button class="modal-close" id="how-to-join-close" type="button" aria-label="Close">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+
+      <p class="modal-eyebrow">heart rip</p>
+      <h2 id="how-to-join-title">This is invite-only</h2>
+
+      <ul class="modal-steps">
+        <li>
+          <span class="step-num">1</span>
+          <p>There's no public sign-up. The only way in is <strong>an invite from someone who's already a member.</strong></p>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <p>Ask around — if someone you know is already in, they may be able to bring you in.</p>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <p>Once you're in, you get a <strong>unique UID</strong> and your own bio page. From there, you can also <strong>donate</strong> and, depending on your standing, <strong>invite others</strong> yourself.</p>
+        </li>
+      </ul>
+
+      <p class="modal-note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        Donating and inviting are both member-only privileges — you have to be invited first before you can do either.
+      </p>
+    </div>
+  </div>
+
   <div class="container">
     <section class="hero-section">
-      <h1 id="animated-text"><span class="typed-text"></span><span class="cursor">|</span></h1>
+      <h1 id="animated-text"><span class="typed-text"></span><span class="cursor" aria-hidden="true">|</span></h1>
       <p>a sleek solution for your bio links.</p>
-      <a href="https://discord.gg/mYaGj3DCXN" class="join-btn">
-        <i class="bi bi-discord"></i> Join now <i class="bi bi-arrow-right"></i>
+      <a href="#features" class="join-btn">
+        View more <i class="bi bi-arrow-right" aria-hidden="true"></i>
       </a>
     </section>
 
-    <section class="features-section">
-      <h2>features</h2>
+    <section id="features" class="features-section">
+      <div class="section-head">
+        <!--p class="eyebrow">// what you get</p-->
+        <h2>features</h2>
+      </div>
       <div class="features-grid">
         <div class="feature-card">
-          <i class="bi bi-patch-plus-fill"></i>
+          <i class="bi bi-patch-plus-fill" aria-hidden="true"></i>
           <h3>badges</h3>
           <p>show off your achievements with badges that make your bio page stand out.</p>
         </div>
         <div class="feature-card">
-          <i class="bi bi-sliders"></i>
+          <i class="bi bi-sliders" aria-hidden="true"></i>
           <h3>custom</h3>
           <p>personalize every detail of your page, even upload your own page.</p>
         </div>
         <div class="feature-card">
-          <i class="bi bi-123"></i>
+          <i class="bi bi-123" aria-hidden="true"></i>
           <h3>UID based</h3>
           <p>each profile is tied to a unique ID, perfect for collectors and rarity hunters.</p>
         </div>
       </div>
     </section>
-    <section class="plans-section">
-  <h2> </h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <i class="bi bi-person-fill-check"></i>
-      <h3>Invited</h3>
-      <p>
-        <i class="bi bi-check-lg icon"></i> simple bio page themes<br>
-        <i class="bi bi-check-lg icon"></i> customizable colors<br>
-        <i class="bi bi-check-lg icon"></i> custom music<br>
-        <i class="bi bi-check-lg icon"></i> unique UID
-      </p>
-    </div>
-    <div class="feature-card">
-      <i class="bi bi-star-fill"></i>
-      <h3>Donator</h3>
-      <p>
-        <i class="bi bi-gem icon"></i> upload your own HTML page<br>
-        <i class="bi bi-gem icon"></i> exclusive donator badge<br>
-        <i class="bi bi-gem icon"></i> discord donator role<br>
-        <i class="bi bi-gem icon"></i> priority support
-      </p>
-    </div>
-  </div>
-</section>
 
+    <section class="plans-section">
+      <div class="section-head">
+        <!--p class="eyebrow">// pick your tier</p-->
+        <h2>tiers</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <i class="bi bi-person-fill-check" aria-hidden="true"></i>
+          <h3>Invited</h3>
+          <p>
+            <span><i class="bi bi-check-lg icon" aria-hidden="true"></i>simple bio page themes</span>
+            <span><i class="bi bi-check-lg icon" aria-hidden="true"></i>customizable colors</span>
+            <span><i class="bi bi-check-lg icon" aria-hidden="true"></i>custom music</span>
+            <span><i class="bi bi-check-lg icon" aria-hidden="true"></i>unique UID</span>
+          </p>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-star-fill" aria-hidden="true"></i>
+          <h3>Donator</h3>
+          <p>
+            <span><i class="bi bi-gem icon" aria-hidden="true"></i>upload your own HTML page</span>
+            <span><i class="bi bi-gem icon" aria-hidden="true"></i>exclusive donator badge</span>
+            <span><i class="bi bi-gem icon" aria-hidden="true"></i>discord donator role</span>
+            <span><i class="bi bi-gem icon" aria-hidden="true"></i>priority support</span>
+          </p>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer>
-    <p>&copy; 2025 S2.RIP - All rights reserved.</p>
+    <p>&copy; 2025 S2.RIP — All rights reserved.</p>
   </footer>
 
-  <script src="res/script.js"></script>
+  <script>
+    // How to join modal: opens on button click, closes on the close button,
+    // a backdrop click, or Escape. Focus moves into the dialog on open and
+    // back to the trigger on close, and background scroll is locked while
+    // the modal is open.
+    (function () {
+      const openBtn = document.getElementById("how-to-join-btn");
+      const modal = document.getElementById("how-to-join-modal");
+      const closeBtn = document.getElementById("how-to-join-close");
+      if (!openBtn || !modal || !closeBtn) return;
+
+      function openModal() {
+        modal.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        closeBtn.focus();
+        document.addEventListener("keydown", onKeydown);
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKeydown);
+        openBtn.focus();
+      }
+
+      function onKeydown(e) {
+        if (e.key === "Escape") closeModal();
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+    })();
+  </script>
+
+  <script>
+    // Hero typewriter: types the phrase once, then leaves the cursor
+    // blinking. Kept dependency-free so the page has no external script.
+    (function () {
+      const el = document.querySelector(".typed-text");
+      if (!el) return;
+      const phrase = "heart rip";
+      let i = 0;
+
+      function type() {
+        el.textContent = phrase.slice(0, i);
+        i++;
+        if (i <= phrase.length) {
+          setTimeout(type, 90);
+        }
+      }
+
+      type();
+    })();
+  </script>
+
+  <script>
+    // Same floating-particle signature as the profile page: mostly pale
+    // neutral motes with a minority tinted orange, drifting slowly upward.
+    // Sized to the full scrollable page height so it stays behind content
+    // as you scroll.
+    window.addEventListener("DOMContentLoaded", function () {
+      const canvas = document.getElementById("particles");
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext("2d");
+      const NEUTRAL = "210, 213, 218";
+      const EMBER = "249, 115, 22";
+      const BG = "10, 11, 13";
+
+      let dpr = 1;
+      let w = 0;
+      let h = 0;
+      let particles = [];
+      let t = 0;
+
+      function makeParticle() {
+        const isEmber = Math.random() < 0.22;
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: isEmber ? 1 + Math.random() * 1.4 : 0.6 + Math.random() * 1,
+          baseOpacity: isEmber ? 0.3 + Math.random() * 0.3 : 0.08 + Math.random() * 0.16,
+          driftX: (Math.random() - 0.5) * 0.1,
+          driftY: -(0.06 + Math.random() * 0.16),
+          phase: Math.random() * Math.PI * 2,
+          twinkleSpeed: 0.006 + Math.random() * 0.01,
+          color: isEmber ? EMBER : NEUTRAL,
+        };
+      }
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth;
+        h = document.documentElement.scrollHeight;
+        canvas.width = Math.max(1, Math.round(w * dpr));
+        canvas.height = Math.max(1, Math.round(h * dpr));
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const count = Math.max(60, Math.round((w * h) / 13000));
+        particles = Array.from({ length: count }, () => makeParticle());
+        paintFrame();
+      }
+
+      function paintFrame() {
+        ctx.fillStyle = `rgb(${BG})`;
+        ctx.fillRect(0, 0, w, h);
+
+        for (const p of particles) {
+          const twinkle = 0.6 + 0.4 * Math.sin(t * p.twinkleSpeed + p.phase);
+          ctx.fillStyle = `rgba(${p.color}, ${p.baseOpacity * twinkle})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          p.x += p.driftX;
+          p.y += p.driftY;
+
+          if (p.y < -6) p.y = h + 6;
+          if (p.x < -6) p.x = w + 6;
+          if (p.x > w + 6) p.x = -6;
+        }
+
+        t += 1;
+      }
+
+      function loop() {
+        paintFrame();
+        requestAnimationFrame(loop);
+      }
+
+      resize();
+      window.addEventListener("resize", resize);
+      requestAnimationFrame(loop);
+    });
+  </script>
 </body>
 </html>
